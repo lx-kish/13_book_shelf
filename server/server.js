@@ -52,6 +52,18 @@ app.post('/api/book', (req, res) => {
     })
 })
 
+app.post('/api/register', (req, res) => {
+    const user = new User(req.body);
+
+    user.save((err, doc) => {
+        if(err) return res.json({success: false});
+        res.status(200).json({
+            success: true,
+            user: doc
+        })
+    })
+})
+
 // UPDATE //
 
 app.post('/api/book_update', (req, res) => {
