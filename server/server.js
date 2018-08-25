@@ -10,11 +10,19 @@ mongoose.connect(config.DATABASE);
 
 const { User } = require('./models/user');
 const { Book } = require('./models/book');
+const { auth } = require('./middleware/auth')
 
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 // GET //
+
+app.get('/api/logout', auth, (req, res) => {
+    req.user.deleteToken(req.token, (err, user) => {
+        if(err) return res.status(400).send(err);
+        res.sendStatus(200)
+    })
+})
 
 app.get('/api/getBook', (req, res) => {
     let id = req.query.id;
@@ -54,6 +62,13 @@ app.get('/api/users', (req, res) => {
     User.find({}, (err, users) => {
         if(err) return res.status(400).send(err);
         res.status(200).send(users)
+    })
+})
+
+app.get('/api/user_posts', (req, res) => {
+    Book.find({ownerId: req.query.user}).exec((err, docs) => {
+        if(err) return res.status(400).send(err);
+        res.send(docs)
     })
 })
 
