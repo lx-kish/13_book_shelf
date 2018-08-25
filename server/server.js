@@ -38,6 +38,25 @@ app.get('/api/books', (req, res) => {
 
 })
 
+app.get('/api/getReviewer', (req, res) => {
+    let id = req.query.id;
+
+    User.findById(id, (err, doc) => {
+        if(err) return res.status(400).send(err);
+        res.json({
+            name: doc.name,
+            lastname: doc.lastname
+        })
+    })
+})
+
+app.get('/api/users', (req, res) => {
+    User.find({}, (err, users) => {
+        if(err) return res.status(400).send(err);
+        res.status(200).send(users)
+    })
+})
+
 // POST //
 
 app.post('/api/book', (req, res) => {
@@ -60,6 +79,29 @@ app.post('/api/register', (req, res) => {
         res.status(200).json({
             success: true,
             user: doc
+        })
+    })
+})
+
+app.post('/api/login', (req, res) => {
+
+    User.findOne({'email': req.body.email}, (err, user) => {
+        if(!user) return res.json({isAuth: false, message: 'Auth failed, email not found'});
+
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if(!isMatch) return res.json({
+                isAuth: false,
+                message: 'Wrong password'
+            });
+
+            user.generateToken((err, user) => {
+                if(err) return res.status(400).send(err);
+                res.cookie('auth', user.token).json({
+                    isAuth: true,
+                    id: user._id,
+                    email: user.email
+                })
+            })
         })
     })
 })
