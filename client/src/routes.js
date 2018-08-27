@@ -6,11 +6,13 @@ import BookView from './components/Books';
 import Login from './containers/Admin/login';
 import Layout from './hoc/layout';
 
+import Auth from './hoc/auth';
+
 const Routes = () => {
     return (
         <Layout>
             <Switch>
-                <Route path="/" exact component={Home} />
+                <Route path="/" exact component={Auth(Home)} />
                 <Route path="/book/:id" exact component={BookView} />
                 <Route path="/login" exact component={Login}/>
             </Switch>
