@@ -77,7 +77,7 @@ class EditBook extends PureComponent {
                 {
                     books.updateBook ?
                         <div className="edit_confirm">
-                            post updated, <Link to={`/books/${books.book._id}`}>
+                            Post updated, <Link to={`/books/${books.book._id}`}>
                                 Click here to see your post
                             </Link>
                         </div>
