@@ -8,7 +8,7 @@ class Register extends Component {
         name: '',
         lastname: '',
         password: '',
-        errors: ''
+        error: ''
     }
 
     componentWillMount() {
@@ -16,23 +16,35 @@ class Register extends Component {
     }
 
     handleInputEmail = (event) => {
-
+        this.setState({email: event.target.value})
     }
 
     handleInputPassword = (event) => {
-        
+        this.setState({password: event.target.value})
     }
     
     handleInputName = (event) => {
-        
+        this.setState({name: event.target.value})
     }
     
     handleInputLastname = (event) => {
+        this.setState({lastname: event.target.value})
+    }
+
+    componentWillReceiveProps(nextProps) {
         
     }
 
     submitForm = (e) => {
         e.preventDefault();
+        this.setState({error: ''});
+
+        this.props.dispatch(userRegister({
+            email: this.state.email,
+            password: this.state.password,
+            name: this.state.name,
+            lastname: this.state.lastname
+        }, this.props.user.users))
     }
 
     showUsers = (user) => (
@@ -48,12 +60,54 @@ class Register extends Component {
     )
 
     render() {
+        console.log(this.props);
         let user = this.props.user;
         return (
             <div className="rl_container">
                 <form onSubmit={this.submitForm}>
                     <h2>Add user</h2>
-                </form>
+
+                    <div className="form_element">
+                        <input
+                            type="text"
+                            placeholder="Enter name"
+                            value={this.state.name}
+                            onChange={this.handleInputName}
+                        />
+                    </div>
+
+                    <div className="form_element">
+                        <input
+                            type="text"
+                            placeholder="Enter lastname"
+                            value={this.state.lastname}
+                            onChange={this.handleInputLastname}
+                        />
+                    </div>
+
+                    <div className="form_element">
+                        <input
+                            type="email"
+                            placeholder="Enter email"
+                            value={this.state.email}
+                            onChange={this.handleInputEmail}
+                        />
+                    </div>
+ 
+                    <div className="form_element">
+                        <input
+                            type="password"
+                            placeholder="Enter password"
+                            value={this.state.password}
+                            onChange={this.handleInputPassword}
+                        />
+                    </div>
+
+                    <button type="submit">Add user</button>
+                    <div className="error">
+                        {this.state.error}
+                    </div>
+               </form>
                 <div className="current_users">
                     <h4>Current users:</h4>
                     <table>
