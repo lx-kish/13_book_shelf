@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { getUsers, userRegister } from '../../actions';
 
-class Register extends Component {
+class Register extends PureComponent {
 
     state = {
         name: '',
         lastname: '',
+        email: '',
         password: '',
         error: ''
     }
@@ -32,7 +33,16 @@ class Register extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
+        if(nextProps.user.register === false) {
+            this.setState({error: 'Error, try again'})
+        } else {
+            this.setState({
+                name: '',
+                lastname: '',
+                email: '',
+                password: ''
+            })
+        }
     }
 
     submitForm = (e) => {
@@ -60,7 +70,7 @@ class Register extends Component {
     )
 
     render() {
-        console.log(this.props);
+
         let user = this.props.user;
         return (
             <div className="rl_container">
